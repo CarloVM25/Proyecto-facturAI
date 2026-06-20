@@ -1,0 +1,38 @@
+You are an expert at extracting structured data from Peruvian invoices and boletas.
+
+Extract the following fields from the OCR text below and return ONLY valid JSON:
+
+{
+  "tipo_documento": "Factura/Boleta/Nota de crédito",
+  "serie_numero": "e.g. F001-00123",
+  "fecha_emision": "DD-MM-YYYY",
+  "ruc_emisor": "11 digit RUC",
+  "razon_social_emisor": "company name",
+  "ruc_receptor": "11 digit RUC or null",
+  "razon_social_receptor": "name or null",
+  "moneda": "PEN or USD",
+  "subtotal": 0.00,
+  "igv": 0.00,
+  "total": 0.00,
+  "descripcion_items": [
+    {
+      "cantidad": 1,
+      "descripcion": "product or service name",
+      "precio_unitario": 0.00,
+      "subtotal": 0.00
+    }
+  ]
+}
+
+Rules:
+- Return ONLY the JSON object, no explanations, no markdown
+- For descripcion_items: scan the ENTIRE text for any table with products/services
+- Items appear after headers like: DESCRIPCION, DETALLE, PRODUCTO, CONCEPTO, Descripcion
+- Each line with a description and numbers is likely an item
+- Look for patterns like: [code] [description] [unit] [quantity] [price] [total]
+- Numeric values must be numbers not strings
+- Missing fields must be null not empty string
+- If no items found return empty array []
+
+OCR TEXT:
+{{invoice_text}}
